@@ -45,5 +45,9 @@ namespace _52Assignments.Data
         {
             await _database.InsertAsync(submission);
         }
+        public async Task<User> GetUserByName(string name)
+        {
+            return await _database.Table<User>().FirstOrDefaultAsync(u => u.UserName == name);
+        }
     }
 }

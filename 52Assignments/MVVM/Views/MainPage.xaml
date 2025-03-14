@@ -9,8 +9,8 @@
             Spacing="25"
             HorizontalOptions="Center"
             VerticalOptions="Center">
-            <Button Text="Inloggen"/>
-            <Button Text="Aanmelden"/>
+            <Button Text="Inloggen" x:Name="LoginBtn" Clicked="LoginBtn_Clicked"/>
+            <Button Text="Aanmelden" x:Name="RegisterBtn" Clicked="RegisterBtn_Clicked"/>
 
 
         </VerticalStackLayout>

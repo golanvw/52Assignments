@@ -24,6 +24,6 @@ namespace _52Assignments.MVVM.Models
 
         public int Points { get; set; }
 
-        public List<Theme> Themes { get; set; }
+        public List<int> Themes { get; set; }
     }
 }
