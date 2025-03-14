@@ -23,7 +23,5 @@ namespace _52Assignments.MVVM.Models
         public string Frequency { get; set; }
 
         public int Points { get; set; }
-
-        public List<int> Themes { get; set; }
     }
 }

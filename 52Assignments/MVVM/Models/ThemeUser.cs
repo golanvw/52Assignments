@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace _52Assignments.MVVM.Models
 {
-    [SQLite.Table("Assignment")]
-    public class Assignment
+    [SQLite.Table("ThemeUser")]
+    public class ThemeUser
     {
         [PrimaryKey, AutoIncrement]
-        public int AssignmentId { get; set; }
-        public string Name { get; set; }
+        public int Id { get; set; }
+        public int UserId { get; set; }
         public int ThemeId { get; set; }
     }
 }

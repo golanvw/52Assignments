@@ -10,7 +10,7 @@ using _52Assignments.MVVM.Models;
 
 namespace _52Assignments.MVVM.Viewmodels
 {
-    public class RegisterViewModel 
+    public class RegisterViewModel : INotifyPropertyChanged
     {
         public ICommand RegisterCommand { get; set; }
         private string _name;
@@ -22,6 +22,7 @@ namespace _52Assignments.MVVM.Viewmodels
                 if (_name != value)
                 {
                     _name = value;
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -34,13 +35,14 @@ namespace _52Assignments.MVVM.Viewmodels
                 if (_password != value)
                 {
                     _password = value;
+                    OnPropertyChanged(nameof(Password));
                 }
             }
         }
         private async Task RegisterAsync()
         {
             var database = App.Database;
-            if (database.GetUserByName(Name) == null)
+            if (await database.GetUserByName(Name) == null)
             {
                 User user = new User
                 {
@@ -64,6 +66,12 @@ namespace _52Assignments.MVVM.Viewmodels
         public RegisterViewModel() 
         { 
             RegisterCommand = new Command(async () => await RegisterAsync());
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

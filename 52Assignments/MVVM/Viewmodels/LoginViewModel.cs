@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,8 +44,11 @@ namespace _52Assignments.MVVM.Viewmodels
             { 
                 if(Password == LoggingInUser.Password)
                 {
+                    await SecureStorage.SetAsync("userId", LoggingInUser.UserId.ToString());
                     await SecureStorage.SetAsync("IsLoggedIn", "true");
                     Application.Current.MainPage = new NavigationPage(new HomePage());
+                    Debug.WriteLine("inloggen succesvol");
+                    Application.Current.MainPage.DisplayAlert("gelukt", "u bent succesvol ingelogd", "ok");
                 }
             }
         }
