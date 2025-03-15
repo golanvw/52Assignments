@@ -8,7 +8,7 @@
             android:TabbedPage.ToolbarPlacement="Bottom">
   <!--Pages can be added as references or inline-->
     <local:HomePage Title="Home" />
-    <ContentPage Title="ExecutingAssignment" />
+    <local:CameraPage Title="Camera" />
     <ContentPage Title="MySubmissions" />
     <local:ShopPage Title="Shop"/>
 </TabbedPage>
