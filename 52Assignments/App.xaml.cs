@@ -12,7 +12,7 @@ namespace _52Assignments
             InitializeDatabase();
             if (SecureStorage.GetAsync("IsLoggedIn").Result == "true")
             {
-                MainPage = new NavigationPage(new HomePage());
+                MainPage = new NavigationPage(new TabbedNavPage());
             }
             else
             {

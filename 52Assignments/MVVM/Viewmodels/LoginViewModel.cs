@@ -46,7 +46,7 @@ namespace _52Assignments.MVVM.Viewmodels
                 {
                     await SecureStorage.SetAsync("userId", LoggingInUser.UserId.ToString());
                     await SecureStorage.SetAsync("IsLoggedIn", "true");
-                    Application.Current.MainPage = new NavigationPage(new HomePage());
+                    Application.Current.MainPage = new NavigationPage(new TabbedNavPage());
                     Debug.WriteLine("inloggen succesvol");
                     Application.Current.MainPage.DisplayAlert("gelukt", "u bent succesvol ingelogd", "ok");
                 }

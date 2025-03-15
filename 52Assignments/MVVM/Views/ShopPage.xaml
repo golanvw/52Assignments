@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="_52Assignments.MVVM.Views.ShopPage"
+             xmlns:local="clr-namespace:_52Assignments.MVVM.Viewmodels">
+    <ContentPage.BindingContext>
+        <local:ShopViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <Grid RowDefinitions="auto,auto,auto,auto,auto,auto" ColumnDefinitions="auto,*">
+            <Label Text="Aantal punten:" FontSize="40"/>
+            <Label Text="{Binding PointAmount}" Grid.Column="1" FontSize="40" HorizontalOptions="Center"/>
+            <Label Text="Punten kopen" Grid.ColumnSpan="1" Grid.Row="1" FontSize="30"/>
+            <Label Text="1 punt" Grid.Column="0" Grid.Row="2" FontSize="25"/>
+            <Label Text="1 euro" Grid.Column="0" Grid.Row="3" FontSize="25"/>
+            <Button Text="Kopen" Grid.Column="1" Grid.Row="2" Grid.RowSpan="2" Command="{Binding BuyPoint1Command}"/>
+            <Label Text="10 punten" Grid.Column="0" Grid.Row="4" FontSize="25" Padding="0,20,0,0"/>
+            <Label Text="7 euro" Grid.Column="0" Grid.Row="5" FontSize="25"/>
+            <Button Text="Kopen" Grid.Column="1" Grid.Row="4" Grid.RowSpan="2" Command="{Binding BuyPoints10Command}" Margin="0,20,0,0"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

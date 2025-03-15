@@ -124,6 +124,7 @@ namespace _52Assignments.Data
             var UserId = SecureStorage.GetAsync("userId").Result;
             var CurrentUser = await GetUserById(int.Parse(UserId));
             CurrentUser.Points = CurrentUser.Points + points;
+            await _database.UpdateAsync(CurrentUser);
         }
     }
 }
