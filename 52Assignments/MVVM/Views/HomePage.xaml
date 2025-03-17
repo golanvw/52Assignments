@@ -2,12 +2,28 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="_52Assignments.MVVM.Views.HomePage"
-             Title="Home">
+             Title="Home"
+             xmlns:local="clr-namespace:_52Assignments.MVVM.Viewmodels">
+    <ContentPage.BindingContext>
+        <local:HomePageViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Account" Command="{Binding GoToAccountCommand}"/>
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Homepage"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <ScrollView>
+            <Grid RowDefinitions="auto,auto,auto,auto">
+                <CollectionView ItemsSource="{Binding Submissions}" SelectionMode="Single" SelectedItem="{Binding SelectedSubmission}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid RowDefinitions="auto" ColumnDefinitions="auto">
+                                <ImageButton Source="{Binding ImagePath}" Aspect="Fill" HeightRequest="500" WidthRequest="400" Command="{Binding Source={RelativeSource AncestorType={x:Type local:HomePageViewModel}}, Path=NavigateCommand}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <Button Text="Refresh" Command="{Binding Refreshcommand}" Grid.Row="1"/>
+            </Grid>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

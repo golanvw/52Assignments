@@ -9,11 +9,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Xml.Linq;
 
 namespace _52Assignments.MVVM.Viewmodels
 {
-    public class MySubmissionsViewModel : INotifyPropertyChanged
+    public class HomePageViewModel : INotifyPropertyChanged
     {
         private ObservableCollection<Submission> _submissions;
         public ObservableCollection<Submission> Submissions
@@ -30,7 +29,7 @@ namespace _52Assignments.MVVM.Viewmodels
         }
         private Submission _selectedSubmission;
         public Submission SelectedSubmission
-        { 
+        {
             get => _selectedSubmission;
             set
             {
@@ -41,16 +40,16 @@ namespace _52Assignments.MVVM.Viewmodels
                 }
             }
         }
-        public ICommand Refreshcommand { get; set; }
+        public ICommand GoToAccountCommand { get; set; }
         public ICommand NavigateCommand { get; set; }
-        
-        public MySubmissionsViewModel()
-        {
+        public ICommand RefreshCommand { get; set; }
+        public HomePageViewModel() 
+        { 
+            GoToAccountCommand = new Command(async => GoToAccount());
             LoadSubmissions();
-            Refreshcommand = new Command(async => LoadSubmissions());
+            RefreshCommand = new Command(async => LoadSubmissions());
             NavigateCommand = new Command(async => GoToSubmission());
         }
-
 
         public async Task LoadSubmissions()
         {
@@ -64,11 +63,23 @@ namespace _52Assignments.MVVM.Viewmodels
             SelectedSubmission = Submissions.FirstOrDefault();
         }
 
+        public async Task GoToAccount()
+        {
+            if (Application.Current.MainPage is NavigationPage navPage)
+            {
+                await navPage.Navigation.PushAsync(new AccountPage());
+            }
+            else
+            {
+                Debug.WriteLine("Navigatie kon niet worden uitgevoerd, MainPage is geen NavigationPage.");
+            }
+        }
+
         public async Task GoToSubmission()
         {
 
             await SecureStorage.SetAsync("currentSub", SelectedSubmission.SubmissionId.ToString());
-            
+
             if (Application.Current.MainPage is NavigationPage navPage)
             {
                 await navPage.Navigation.PushAsync(new SubmissionInfoPage());
@@ -79,9 +90,7 @@ namespace _52Assignments.MVVM.Viewmodels
             }
         }
 
-
         public event PropertyChangedEventHandler PropertyChanged;
-
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

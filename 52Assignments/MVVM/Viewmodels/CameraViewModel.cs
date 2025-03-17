@@ -9,6 +9,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using _52Assignments.MVVM.Models;
 using System.Diagnostics;
+using Newtonsoft.Json;
+using System.Text.Json;
 
 
 namespace _52Assignments.MVVM.Viewmodels
@@ -38,6 +40,8 @@ namespace _52Assignments.MVVM.Viewmodels
             TakePhotoCommand = new AsyncRelayCommand(TakePhotoAsync);
             GetAssignmentCommand = new Command(async => GetCurrentAssignment());
             GetCurrentAssignment();
+            _httpClient = new HttpClient();
+            _httpClient.DefaultRequestHeaders.Add("Authorization", ApiKey);
         }
 
         public ICommand TakePhotoCommand { get; }
@@ -76,13 +80,63 @@ namespace _52Assignments.MVVM.Viewmodels
                     ImagePath = localFilePath
                 };
                 await database.AddSubmissionAsync(newSubmission);
+                await database.AddPointsToUser(1);
 
-                // Update de ImageSource voor databinding
+                
                 PhotoSource = ImageSource.FromFile(localFilePath);
-                }
+            }
         }
 
+        private const string ApiKey = "JOUW_PEXELS_API_SLEUTEL";
+        private const string ApiUrl = "https://api.pexels.com/v1/search?query={0}&per_page=1"; 
 
+        private readonly HttpClient _httpClient;
+        
+        [ObservableProperty]
+        private string searchQuery = "nature"; 
 
+        [ObservableProperty]
+        private string photoUrl;
+
+        [RelayCommand]
+        //public async Task SearchPhotoAsync()
+        //{
+        //    if (string.IsNullOrWhiteSpace(SearchQuery))
+        //        return;
+
+        //    string url = string.Format(ApiUrl, SearchQuery);
+
+        //    try
+        //    {
+        //        var response = await _httpClient.GetStringAsync(url);
+        //        var json = JsonSerializer.Deserialize<PexelsResponse>(response);
+
+        //        if (json?.Photos.Count > 0)
+        //        {
+        //            PhotoUrl = json.Photos[0].Src.Medium; // Pak de eerste (en enige) foto
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Fout bij ophalen van foto: {ex.Message}");
+        //    }
+        //}
     }
+
+    // 📌 Model voor Pexels API response
+    public class PexelsResponse
+    {
+        public List<PexelsPhoto> Photos { get; set; } = new();
+    }
+
+    public class PexelsPhoto
+    {
+        public PexelsSrc Src { get; set; }
+    }
+
+    public class PexelsSrc
+    {
+        public string Medium { get; set; }
+    }
+}
 }

@@ -168,6 +168,7 @@ namespace _52Assignments.MVVM.Viewmodels
         {
             var database = App.Database;
             await database.DeleteComment(SelectedComment.CommentId);
+            await LoadComments(int.Parse(SecureStorage.GetAsync("currentSub").Result));
         }
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)

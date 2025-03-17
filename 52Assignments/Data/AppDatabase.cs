@@ -188,5 +188,12 @@ namespace _52Assignments.Data
             await _database.DeleteAsync(comment);
         }
 
+        public async Task SetFrequency(string frequency)
+        {
+            var UserId = SecureStorage.GetAsync("userId").Result;
+            var CurrentUser = await GetUserById(int.Parse(UserId));
+            CurrentUser.Frequency = frequency;
+            await _database.UpdateAsync(CurrentUser);
+        }
     }
 }

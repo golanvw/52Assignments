@@ -13,6 +13,8 @@
             <Button Text="maak een foto" Command="{Binding TakePhotoCommand}"/>
             <Image Source="{Binding PhotoSource}"/>
             <Button Text="nieuwe opdracht" Command="{Binding GetAssignmentCommand}"/>
+            <Label Text="Inspriatie nodig?"/>
+            <Image Source="{Binding}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

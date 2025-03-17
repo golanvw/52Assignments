@@ -1,5 +1,6 @@
 ﻿using _52Assignments.Data;
 using _52Assignments.MVVM.Views;
+using Plugin.LocalNotification;
 
 namespace _52Assignments
 {
@@ -18,6 +19,25 @@ namespace _52Assignments
             {
                 MainPage = new NavigationPage(new MainPage());
             }
+            Task.Run(async () =>
+            {
+                while (true) // Oneindige lus
+                {
+                    var notification = new NotificationRequest
+                    {
+                        NotificationId = 1004,
+                        Title = "Herinnering",
+                        Description = "Dit is een melding die elke minuut verschijnt!",
+                        Schedule = new NotificationRequestSchedule
+                        {
+                            NotifyTime = DateTime.Now.AddSeconds(5)
+                        }
+                    };
+
+                    LocalNotificationCenter.Current.Show(notification);
+                    await Task.Delay(TimeSpan.FromMinutes(1));
+                }
+            });
         }
 
         private void InitializeDatabase()
