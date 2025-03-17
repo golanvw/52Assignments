@@ -8,8 +8,11 @@
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <StackLayout>
+            <Label Text="Huidige opdracht:" FontSize="30"/>
+            <Label Text="{Binding AssignmentName}" FontSize="30"/>
             <Button Text="maak een foto" Command="{Binding TakePhotoCommand}"/>
             <Image Source="{Binding PhotoSource}"/>
+            <Button Text="nieuwe opdracht" Command="{Binding GetAssignmentCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -2,7 +2,9 @@
 using SQLite;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -22,6 +24,7 @@ namespace _52Assignments.Data
             _database.CreateTableAsync<Theme>().Wait();
             _database.CreateTableAsync<User>().Wait();
             _database.CreateTableAsync<ThemeUser>().Wait();
+            SeedDatabase();
         }
 
         public async Task SeedDatabase()
@@ -29,6 +32,7 @@ namespace _52Assignments.Data
             var themes = await _database.Table<Theme>().ToListAsync();
             if (themes == null)
             {
+                Debug.WriteLine("seeden van themes wordt gedaan");
                 var newTheme1 = new Theme { ThemeName = "Autos" };
                 await _database.InsertAsync(newTheme1);
                 var newTheme2 = new Theme { ThemeName = "Gebouwen" };
@@ -39,6 +43,7 @@ namespace _52Assignments.Data
             var assignments = await _database.Table<Assignment>().ToListAsync();
             if (assignments == null)
             {
+                Debug.WriteLine("seeden van assignments wordt gedaan");
                 var newAssignment1 = new Assignment { Name = "Mercedes", ThemeId = 1 };
                 await _database.InsertAsync(newAssignment1);
                 var newAssignment2 = new Assignment { Name = "Audi", ThemeId = 1 };
@@ -67,6 +72,7 @@ namespace _52Assignments.Data
             var users = _database.Table<User>();
             if(users == null)
             {
+                Debug.WriteLine("seeden van users en themeusers wordt gedaan");
                 var newUser1 = new User { UserName = "Golan1", Password = "Golan1", Role = "Free", Points = 5, Frequency = "Daily" };
                 await _database.InsertAsync(newUser1);
                 var newUser2 = new User { UserName = "GolanSuper", Password = "GolanSuper", Role = "Super", Points = 5, Frequency = "Daily" };
@@ -82,6 +88,7 @@ namespace _52Assignments.Data
                 var newThemeUser4 = new ThemeUser { ThemeId = 3, UserId = 2 };
                 await _database.InsertAsync(newThemeUser4);
             }
+            Debug.WriteLine("seeden gedaan");
         }
 
         public async Task AddUserAsync(User user)
@@ -99,6 +106,11 @@ namespace _52Assignments.Data
         public async Task AddCommentAsync(Comment comment)
         {
             await _database.InsertAsync(comment);
+        }
+
+        public async Task AddThemeUserAsync(ThemeUser themeUser)
+        {
+            await _database.InsertAsync(themeUser);
         }
 
         public async Task RatingAsync(Rating rating)
@@ -119,6 +131,13 @@ namespace _52Assignments.Data
             return await _database.Table<User>().FirstOrDefaultAsync(u => u.UserId == id);
         }
 
+        public async Task<List<Submission>> GetUserSubmissions()
+        {
+            var userId = int.Parse(SecureStorage.GetAsync("userId").Result);
+            var currentUser = await GetUserById(userId);
+            return await _database.Table<Submission>().Where(u => u.UserId == currentUser.UserId).ToListAsync();
+        }
+
         public async Task AddPointsToUser(int points)
         {
             var UserId = SecureStorage.GetAsync("userId").Result;
@@ -126,5 +145,48 @@ namespace _52Assignments.Data
             CurrentUser.Points = CurrentUser.Points + points;
             await _database.UpdateAsync(CurrentUser);
         }
+
+        public async Task<Assignment> GetAssignment()
+        {
+            var currentUserId = int.Parse(SecureStorage.GetAsync("userId").Result);
+            var userThemes = await _database.Table<ThemeUser>().Where(u => u.UserId == currentUserId).ToListAsync();
+            List<Assignment> assignments = new List<Assignment>();
+            
+            foreach (var theme in userThemes)
+            {
+                var AssignmentList = await _database.Table<Assignment>().Where(u => u.ThemeId == theme.ThemeId).ToListAsync();
+                foreach (var assignment in AssignmentList)
+                {
+                    assignments.Add(assignment);
+                }
+            }
+            var random = new Random();
+            var randomNumber = random.Next(0, assignments.Count);
+            var currentAssignment = assignments[randomNumber];
+            return await _database.Table<Assignment>().FirstOrDefaultAsync(u => u.AssignmentId == currentAssignment.AssignmentId);
+
+        }
+
+        public async Task<Submission> GetSubmissionById(int id)
+        {
+            return await _database.Table<Submission>().Where(s => s.SubmissionId == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Comment>> GetComments(int id)
+        {
+            return await _database.Table<Comment>().Where(u => u.SubmissionId == id).ToListAsync();
+        }
+
+        public async Task<Comment> GetComment(int id)
+        {
+            return await _database.Table<Comment>().Where(u => u.CommentId == id).FirstOrDefaultAsync();
+        }
+        
+        public async Task DeleteComment(int id)
+        {
+            var comment = await GetComment(id);
+            await _database.DeleteAsync(comment);
+        }
+
     }
 }
